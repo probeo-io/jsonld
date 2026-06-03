@@ -3,7 +3,9 @@ import type { SchemaTypeDef, FieldValidator, ValidationIssue } from './types.js'
 // ─── Field validators ────────────────────────────────────────────────────────
 
 function isUrl(value: unknown): boolean {
-  return typeof value === 'string' && (value.startsWith('http://') || value.startsWith('https://'));
+  if (typeof value !== 'string') return false;
+  // Accept absolute URLs and protocol-relative URLs (//cdn.example.com)
+  return value.startsWith('http://') || value.startsWith('https://') || value.startsWith('//');
 }
 
 function isDateString(value: unknown): boolean {
@@ -188,8 +190,9 @@ const SCHEMA_TYPES: SchemaTypeDef[] = [
   },
   {
     type: 'ListItem',
-    required: ['position', 'name'],
-    recommended: ['item'],
+    required: ['position'],
+    // name can live directly on ListItem OR on the nested item object — both are valid
+    recommended: ['name', 'item'],
   },
 
   // ── How-to ─────────────────────────────────────────────────────────────────
@@ -233,11 +236,13 @@ const SCHEMA_TYPES: SchemaTypeDef[] = [
   },
   {
     type: 'AggregateRating',
-    required: ['ratingValue', 'reviewCount'],
-    recommended: ['bestRating', 'worstRating'],
+    // Google accepts reviewCount OR ratingCount — both are valid
+    required: ['ratingValue'],
+    recommended: ['reviewCount', 'bestRating', 'worstRating'],
     fieldValidators: {
       ratingValue: positiveNumberValidator('ratingValue'),
       reviewCount: positiveNumberValidator('reviewCount'),
+      ratingCount: positiveNumberValidator('ratingCount'),
     },
   },
 
