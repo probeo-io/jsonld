@@ -1,0 +1,32 @@
+{
+  "name": "@probeo/jsonld",
+  "version": "0.1.0",
+  "description": "Fast, zero-dependency JSON-LD validator. Validates schema.org structured data against Google rich results requirements.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc",
+    "test": "node --experimental-vm-modules node_modules/.bin/vitest run",
+    "test:watch": "node --experimental-vm-modules node_modules/.bin/vitest",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": ["json-ld", "schema.org", "structured-data", "seo", "rich-results", "validation"],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/probeo-io/jsonld.git"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  }
+}
