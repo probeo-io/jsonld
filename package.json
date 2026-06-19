@@ -12,14 +12,24 @@
       "default": "./dist/index.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
+    "prepare": "npm run build",
     "build": "tsc",
     "test": "node --experimental-vm-modules node_modules/.bin/vitest run",
     "test:watch": "node --experimental-vm-modules node_modules/.bin/vitest",
     "prepublishOnly": "npm run build"
   },
-  "keywords": ["json-ld", "schema.org", "structured-data", "seo", "rich-results", "validation"],
+  "keywords": [
+    "json-ld",
+    "schema.org",
+    "structured-data",
+    "seo",
+    "rich-results",
+    "validation"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
