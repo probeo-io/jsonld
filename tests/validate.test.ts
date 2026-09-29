@@ -271,6 +271,28 @@ describe('Real-world schema types', () => {
         },
       ],
     });
-    expect(r.issues.filter(i => i.severity === 'error')).toHaveLength(0);
+    expect(r.issues).toHaveLength(0);
+  });
+
+  it('validates each accepted Answer without reporting an unknown schema type', () => {
+    const r = validateObject({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: [
+        { '@type': 'Question', name: 'First question?', acceptedAnswer: { '@type': 'Answer', text: 'First answer.' } },
+        { '@type': 'Question', name: 'Second question?', acceptedAnswer: { '@type': 'Answer', text: 'Second answer.' } },
+      ],
+    });
+    expect(r.issues).toHaveLength(0);
+  });
+
+  it('requires text on an Answer', () => {
+    const r = validateObject({ '@context': 'https://schema.org', '@type': 'Answer' });
+    expect(r.issues).toContainEqual({
+      path: '$.text',
+      message: 'Missing required property "text" for Answer',
+      severity: 'error',
+      type: 'Answer',
+    });
   });
 });

@@ -181,6 +181,10 @@ const SCHEMA_TYPES: SchemaTypeDef[] = [
     required: ['name', 'acceptedAnswer'],
     nestedTypes: { acceptedAnswer: ['Answer'] },
   },
+  {
+    type: 'Answer',
+    required: ['text'],
+  },
 
   // ── Navigation ─────────────────────────────────────────────────────────────
   {

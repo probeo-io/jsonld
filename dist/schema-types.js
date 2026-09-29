@@ -174,6 +174,10 @@ const SCHEMA_TYPES = [
         required: ['name', 'acceptedAnswer'],
         nestedTypes: { acceptedAnswer: ['Answer'] },
     },
+    {
+        type: 'Answer',
+        required: ['text'],
+    },
     // ── Navigation ─────────────────────────────────────────────────────────────
     {
         type: 'BreadcrumbList',
