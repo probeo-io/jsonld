@@ -109,6 +109,35 @@ describe('Required fields', () => {
     });
     expect(r.issues.filter(i => i.severity === 'error')).toHaveLength(0);
   });
+
+  it('accepts breadcrumb names on nested item objects and an omitted final item', () => {
+    const r = validateObject({
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, item: { '@id': 'https://example.com/', name: 'Home' } },
+        { '@type': 'ListItem', position: 2, name: 'Current page' },
+      ],
+    });
+    expect(r.issues).toHaveLength(0);
+  });
+
+  it('requires a breadcrumb name when neither ListItem nor item names it', () => {
+    const r = validateObject({
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, item: 'https://example.com/' },
+        { '@type': 'ListItem', position: 2, name: 'Current page' },
+      ],
+    });
+    expect(r.issues).toContainEqual({
+      path: '$.itemListElement[0].name',
+      message: 'Missing required property "name" for breadcrumb ListItem',
+      severity: 'error',
+      type: 'ListItem',
+    });
+  });
 });
 
 // ─── Field validators ─────────────────────────────────────────────────────────

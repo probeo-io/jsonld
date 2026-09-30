@@ -195,8 +195,7 @@ const SCHEMA_TYPES: SchemaTypeDef[] = [
   {
     type: 'ListItem',
     required: ['position'],
-    // name can live directly on ListItem OR on the nested item object — both are valid
-    recommended: ['name', 'item'],
+    // Breadcrumb name and item rules depend on the parent list and position.
   },
 
   // ── How-to ─────────────────────────────────────────────────────────────────
