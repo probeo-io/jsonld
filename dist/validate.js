@@ -9,6 +9,9 @@ function normalizeNodes(raw) {
         return obj['@graph'];
     return [raw];
 }
+function hasText(value) {
+    return typeof value === 'string' && value.trim().length > 0;
+}
 function validateNode(node, nodeIndex, basePath, isNested = false) {
     const issues = [];
     if (!node || typeof node !== 'object' || Array.isArray(node)) {
@@ -75,6 +78,17 @@ function validateNode(node, nodeIndex, basePath, isNested = false) {
                 issues.push({ path: `${basePath}.${field}[${i}].@type`, message: `Expected ${field} to be ${expectedTypes.join(' or ')}, got "${nestedType}"`, severity: 'warning', type: primaryType });
             }
             const nestedPath = `${basePath}.${field}${nestedArr.length > 1 ? `[${i}]` : ''}`;
+            if (primaryType === 'BreadcrumbList' && field === 'itemListElement' && nestedType?.toLowerCase() === 'listitem') {
+                const linkedItem = itemObj.item;
+                const linkedName = linkedItem && typeof linkedItem === 'object' && !Array.isArray(linkedItem)
+                    ? linkedItem.name : undefined;
+                if (!hasText(itemObj.name) && !hasText(linkedName)) {
+                    issues.push({ path: `${nestedPath}.name`, message: 'Missing required property "name" for breadcrumb ListItem', severity: 'error', type: 'ListItem' });
+                }
+                if (i < nestedArr.length - 1 && (linkedItem == null || linkedItem === '')) {
+                    issues.push({ path: `${nestedPath}.item`, message: 'Missing required property "item" for breadcrumb ListItem', severity: 'error', type: 'ListItem' });
+                }
+            }
             issues.push(...validateNode(item, nodeIndex, nestedPath, true));
         });
     }
