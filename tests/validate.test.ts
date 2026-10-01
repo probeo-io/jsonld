@@ -138,6 +138,48 @@ describe('Required fields', () => {
       type: 'ListItem',
     });
   });
+
+  it('does not require optional Organization contact and address details', () => {
+    const r = validateObject({
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: 'Example',
+      url: 'https://example.com/',
+      logo: 'https://example.com/logo.png',
+      sameAs: 'https://www.linkedin.com/company/example',
+    });
+    expect(r.issues.some(i => /address|contactPoint/.test(i.path))).toBe(false);
+  });
+
+  it('does not recommend a retired sitelinks search action for WebSite', () => {
+    const r = validateObject({
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: 'Example',
+      url: 'https://example.com/',
+    });
+    expect(r.issues.some(i => i.path.includes('potentialAction'))).toBe(false);
+  });
+
+  it('recognizes Store and checks its local business address', () => {
+    const store = {
+      '@context': 'https://schema.org',
+      '@type': 'Store',
+      name: 'Example Store',
+      address: { '@type': 'PostalAddress', streetAddress: '123 Main St' },
+    };
+    const valid = validateObject(store);
+    expect(valid.issues.some(i => i.message.includes('Unknown schema.org type'))).toBe(false);
+    expect(valid.issues.filter(i => i.severity === 'error')).toHaveLength(0);
+
+    const missingAddress = validateObject({ ...store, address: undefined });
+    expect(missingAddress.issues).toContainEqual({
+      path: '$.address',
+      message: 'Missing required property "address" for Store',
+      severity: 'error',
+      type: 'Store',
+    });
+  });
 });
 
 // ─── Field validators ─────────────────────────────────────────────────────────

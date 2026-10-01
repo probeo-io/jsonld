@@ -123,17 +123,17 @@ Per-type required and recommended properties matching Google's rich results docu
 - `Review.reviewRating` → `Rating`
 - And more — see schema type definitions
 
-## Supported Types (25)
+## Supported Types (31)
 
-Covers every schema.org type Google uses for rich results:
+Checks selected schema.org types used in search features:
 
 | Type | Rich Result Feature |
 |---|---|
 | `Article`, `BlogPosting`, `NewsArticle` | Article rich results |
 | `Product`, `Offer`, `AggregateOffer` | Product rich results |
-| `Organization`, `LocalBusiness` | Knowledge panel, local pack |
+| `Organization`, `LocalBusiness`, `Store`, `PostalAddress` | Organization and local business details |
 | `Person` | Knowledge panel |
-| `WebSite`, `WebPage`, `AboutPage`, `ContactPage` | Sitelinks search, breadcrumbs |
+| `WebSite`, `WebPage`, `AboutPage`, `ContactPage` | Site names, page metadata, breadcrumbs |
 | `FAQPage`, `Question` | FAQ rich results |
 | `BreadcrumbList`, `ListItem` | Breadcrumb trail |
 | `HowTo`, `HowToStep` | How-to rich results |

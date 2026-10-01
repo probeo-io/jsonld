@@ -115,7 +115,9 @@ const SCHEMA_TYPES: SchemaTypeDef[] = [
   {
     type: 'Organization',
     required: ['name'],
-    recommended: ['url', 'logo', 'contactPoint', 'sameAs', 'address'],
+    // Address and contactPoint are only useful when applicable; their absence
+    // is not evidence of a structured-data problem.
+    recommended: ['url', 'logo', 'sameAs'],
     fieldValidators: {
       url: urlValidator('url'),
       logo: urlValidator('logo'),
@@ -134,6 +136,21 @@ const SCHEMA_TYPES: SchemaTypeDef[] = [
       aggregateRating: ['AggregateRating'],
     },
   },
+  {
+    // Store is a LocalBusiness subtype and uses the same Google eligibility
+    // requirements for a physical business location.
+    type: 'Store',
+    required: ['name', 'address'],
+    fieldValidators: {
+      url: urlValidator('url'),
+      image: urlValidator('image'),
+    },
+    nestedTypes: { address: ['PostalAddress'] },
+  },
+  {
+    type: 'PostalAddress',
+    required: [],
+  },
 
   // ── People ─────────────────────────────────────────────────────────────────
   {
@@ -150,7 +167,7 @@ const SCHEMA_TYPES: SchemaTypeDef[] = [
   {
     type: 'WebSite',
     required: ['name'],
-    recommended: ['url', 'potentialAction'],
+    recommended: ['url'],
     fieldValidators: { url: urlValidator('url') },
   },
   {

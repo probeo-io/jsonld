@@ -323,6 +323,19 @@ describe('Real-world: unknown and subtype handling', () => {
 // ─── @graph real-world example ────────────────────────────────────────────────
 
 describe('Real-world: @graph', () => {
+  it('remainehumblefarms.com — organization, website, and two store locations', () => {
+    const r = validateObject({
+      '@context': 'https://schema.org',
+      '@graph': [
+        { '@type': 'Organization', name: 'ReMaine Humble Farms', url: 'https://www.remainehumblefarms.com/', logo: 'https://www.remainehumblefarms.com/logo.png', sameAs: [] },
+        { '@type': 'WebSite', name: 'ReMaine Humble Farms', url: 'https://www.remainehumblefarms.com/' },
+        { '@type': 'Store', name: 'ReMaine Humble Farms — Winslow, ME', address: { '@type': 'PostalAddress', streetAddress: '746 Augusta Rd', addressLocality: 'Winslow' } },
+        { '@type': 'Store', name: 'ReMaine Humble Farms — Portland, ME', address: { '@type': 'PostalAddress', streetAddress: '10 Moulton St', addressLocality: 'Portland' } },
+      ],
+    });
+    expect(r.issues).toHaveLength(0);
+  });
+
   it('pcibrands — @graph with mixed types', () => {
     const r = validateObject({
       '@context': 'https://schema.org',
