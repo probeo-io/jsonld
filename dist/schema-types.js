@@ -52,7 +52,7 @@ const SCHEMA_TYPES = [
     {
         type: 'Article',
         required: ['headline', 'author', 'datePublished'],
-        recommended: ['image', 'dateModified', 'publisher', 'description'],
+        recommended: ['image', 'dateModified', 'publisher'],
         fieldValidators: {
             datePublished: dateValidator('datePublished'),
             dateModified: dateValidator('dateModified'),
@@ -63,7 +63,7 @@ const SCHEMA_TYPES = [
     {
         type: 'BlogPosting',
         required: ['headline', 'author', 'datePublished'],
-        recommended: ['image', 'dateModified', 'publisher', 'description'],
+        recommended: ['image', 'dateModified', 'publisher'],
         fieldValidators: {
             datePublished: dateValidator('datePublished'),
             dateModified: dateValidator('dateModified'),
@@ -74,7 +74,7 @@ const SCHEMA_TYPES = [
     {
         type: 'NewsArticle',
         required: ['headline', 'author', 'datePublished', 'image'],
-        recommended: ['dateModified', 'publisher', 'description'],
+        recommended: ['dateModified', 'publisher'],
         fieldValidators: {
             datePublished: dateValidator('datePublished'),
             dateModified: dateValidator('dateModified'),
@@ -166,7 +166,8 @@ const SCHEMA_TYPES = [
     {
         type: 'WebPage',
         required: ['name'],
-        recommended: ['url', 'description', 'breadcrumb'],
+        // BreadcrumbList can be a separate JSON-LD block on the page.
+        recommended: ['url', 'description'],
         fieldValidators: { url: urlValidator('url') },
     },
     {
@@ -258,7 +259,7 @@ const SCHEMA_TYPES = [
     {
         type: 'VideoObject',
         required: ['name', 'description', 'thumbnailUrl', 'uploadDate'],
-        recommended: ['contentUrl', 'embedUrl', 'duration', 'publisher'],
+        recommended: ['contentUrl', 'embedUrl', 'duration'],
         fieldValidators: {
             thumbnailUrl: urlValidator('thumbnailUrl'),
             contentUrl: urlValidator('contentUrl'),

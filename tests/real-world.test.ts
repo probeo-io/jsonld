@@ -239,6 +239,36 @@ describe('Real-world: bugs found in production', () => {
     expect(r.valid).toBe(false);
     expect(r.issues.some(i => i.path.includes('description') && i.severity === 'error')).toBe(true);
   });
+
+  it('bizee.com — WebPage can use a separate BreadcrumbList block', () => {
+    const page = validateObject({
+      '@context': 'https://schema.org',
+      '@type': 'WebPage',
+      name: 'Bizee',
+      url: 'https://bizee.com/',
+    });
+    const breadcrumbs = validateObject({
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home' }],
+    });
+    expect(page.issues.some(i => i.path.includes('breadcrumb'))).toBe(false);
+    expect(breadcrumbs.issues).toHaveLength(0);
+  });
+
+  it('bizee.com — Article does not need a JSON-LD description', () => {
+    const r = validateObject({
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: 'Why Bizee\'s Standard Package Sets the Gold Standard',
+      datePublished: '2026-01-01',
+      dateModified: '2026-01-02',
+      image: 'https://bizee.com/image.jpg',
+      author: { '@type': 'Organization', name: 'Bizee' },
+      publisher: { '@type': 'Organization', name: 'Bizee' },
+    });
+    expect(r.issues.some(i => i.path.includes('description'))).toBe(false);
+  });
 });
 
 // ─── http vs https @context ───────────────────────────────────────────────────

@@ -328,6 +328,7 @@ describe('Real-world schema types', () => {
       uploadDate: '2024-01-15',
     });
     expect(r.issues.filter(i => i.severity === 'error')).toHaveLength(0);
+    expect(r.issues.some(i => i.path.includes('publisher'))).toBe(false);
   });
 
   it('validates a FAQPage with nested Questions', () => {
