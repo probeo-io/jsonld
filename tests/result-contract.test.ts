@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest';
-import { validateHtml, validateObject } from '../src/index.js';
+import { validateHtml, validateObject } from '../dist/index.js';
 
 function exactKeys(value: object, required: string[], optional: string[] = []) {
   const keys = Object.keys(value);

@@ -18,10 +18,12 @@
   "scripts": {
     "prepare": "npm run build",
     "build": "tsc",
-    "test": "node --experimental-vm-modules node_modules/.bin/vitest run",
+    "test": "npm run build && node --experimental-vm-modules node_modules/.bin/vitest run",
     "test:watch": "node --experimental-vm-modules node_modules/.bin/vitest",
     "prepublishOnly": "npm run build",
-    "vocabulary:update": "node scripts/update-schema-vocabulary.mjs"
+    "vocabulary:update": "node scripts/update-schema-vocabulary.mjs",
+    "validate:fixture": "npm run build --silent && node scripts/validate-fixture.mjs",
+    "test:contract": "npm run build && node --experimental-vm-modules node_modules/.bin/vitest run tests/result-contract.test.ts"
   },
   "keywords": [
     "json-ld",

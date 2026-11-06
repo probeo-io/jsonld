@@ -199,3 +199,10 @@ Only vocabulary classes are accepted as types. Properties and enumeration values
 Existing detailed rules continue to run. For `@type` arrays, every entry is checked for vocabulary membership and the first entry with a detailed rule supplies field validation. Recognition preserves existing case-insensitive matching and accepts bare names, canonical `http://schema.org/` / `https://schema.org/` IRIs, and the conventional `schema:` prefix; this is not a general JSON-LD context-expansion implementation. Known types bypass the plugin-name heuristic. Types missing from the pinned vocabulary still generate warnings.
 
 Scans and package builds make no vocabulary network requests. To deliberately refresh the bundled vocabulary, update the release pin in `scripts/update-schema-vocabulary.mjs`, run `npm run vocabulary:update`, review the generated changes, and run `npm test` and `npm run build`. A previously downloaded pinned JSON-LD file can be passed as an argument for offline regeneration. See https://schema.org/docs/developers.html for the official vocabulary downloads and https://schema.org/docs/terms.html for upstream terms.
+
+
+## Test the package directly
+
+`npm run validate:fixture -- tests/fixtures/exercise-gym.html` builds this package, reads HTML, and prints the actual validator result object as JSON. Supply another HTML file to inspect its output. It does not import or invoke signals and makes no network requests. Findings are returned in the object; the command exits nonzero only for invocation/read failures.
+
+`npm run test:contract` builds the package and checks the serialized result contract against its compiled public exports. `npm test` also builds before running the complete suite, so contract tests cannot accidentally use stale compiled output. The ExerciseGym fixture demonstrates recognition with the current implementation; it does not claim inherited validation is implemented.
