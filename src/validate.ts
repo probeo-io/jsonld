@@ -1,3 +1,4 @@
+import { isKnownSchemaType, schemaTypeName } from './schema-vocabulary.js';
 import type { ValidationIssue, BlockResult } from './types.js';
 import { SCHEMA_TYPE_MAP, isSuspiciousType } from './schema-types.js';
 
@@ -43,17 +44,23 @@ function validateNode(node: unknown, nodeIndex: number, basePath: string, isNest
   }
 
   const types = Array.isArray(typeVal) ? typeVal.map(String) : [String(typeVal)];
-  const primaryType = types[0];
-
-  if (isSuspiciousType(primaryType)) {
-    issues.push({ path: `${basePath}.@type`, message: `@type "${primaryType}" looks like a plugin/theme-specific type, not valid schema.org`, severity: 'warning', type: primaryType });
-  }
-
-  const def = SCHEMA_TYPE_MAP.get(primaryType.toLowerCase());
-  if (!def) {
-    issues.push({ path: `${basePath}.@type`, message: `Unknown schema.org type: "${primaryType}". If this is intentional, verify it is a valid schema.org type.`, severity: 'warning', type: primaryType });
+  if (!types.length) {
+    issues.push({ path: `${basePath}.@type`, message: 'Missing @type', severity: 'error' });
     return issues;
   }
+  for (const type of types) {
+    if (isKnownSchemaType(type)) continue;
+    if (isSuspiciousType(type)) {
+      issues.push({ path: `${basePath}.@type`, message: `@type "${type}" looks like a plugin/theme-specific type, not valid schema.org`, severity: 'warning', type });
+    }
+    issues.push({ path: `${basePath}.@type`, message: `Unknown schema.org type: "${type}". If this is intentional, verify it is a valid schema.org type.`, severity: 'warning', type });
+  }
+
+  // Vocabulary membership and detailed rich-result validation are separate concerns.
+  // A valid type without a rule must not acquire arbitrary requirements from an ancestor.
+  const primaryType = types.find(type => SCHEMA_TYPE_MAP.has(schemaTypeName(type).toLowerCase()));
+  const def = primaryType && SCHEMA_TYPE_MAP.get(schemaTypeName(primaryType).toLowerCase());
+  if (!def || !primaryType) return issues;
 
   for (const field of def.required) {
     if (!(field in obj) || obj[field] == null || obj[field] === '') {
@@ -81,12 +88,13 @@ function validateNode(node: unknown, nodeIndex: number, basePath: string, isNest
     nestedArr.forEach((item, i) => {
       if (!item || typeof item !== 'object') return;
       const itemObj = item as Record<string, unknown>;
-      const nestedType = itemObj['@type'] ? String(itemObj['@type']) : null;
-      if (nestedType && !expectedTypes.some(t => t.toLowerCase() === nestedType.toLowerCase())) {
+      const nestedTypes = itemObj['@type'] ? [itemObj['@type']].flat().map(String) : [];
+      const nestedType = nestedTypes[0] ?? null;
+      if (nestedType && !nestedTypes.some(type => expectedTypes.some(t => t.toLowerCase() === schemaTypeName(type).toLowerCase()))) {
         issues.push({ path: `${basePath}.${field}[${i}].@type`, message: `Expected ${field} to be ${expectedTypes.join(' or ')}, got "${nestedType}"`, severity: 'warning', type: primaryType });
       }
       const nestedPath = `${basePath}.${field}${nestedArr.length > 1 ? `[${i}]` : ''}`;
-      if (primaryType === 'BreadcrumbList' && field === 'itemListElement' && nestedType?.toLowerCase() === 'listitem') {
+      if (schemaTypeName(primaryType).toLowerCase() === 'breadcrumblist' && field === 'itemListElement' && nestedTypes.some(type => schemaTypeName(type).toLowerCase() === 'listitem')) {
         const linkedItem = itemObj.item;
         const linkedName = linkedItem && typeof linkedItem === 'object' && !Array.isArray(linkedItem)
           ? (linkedItem as Record<string, unknown>).name : undefined;

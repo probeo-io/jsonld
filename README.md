@@ -187,3 +187,15 @@ if (result.errors > 0) {
 ## License
 
 MIT
+
+
+## Schema.org vocabulary and validation coverage
+
+Type recognition uses a checked-in list generated from the official **Schema.org 30.1 current HTTPS vocabulary**:
+https://schema.org/version/30.1/schemaorg-current-https.jsonld
+
+Only vocabulary classes are accepted as types. Properties and enumeration values are not treated as types. The generator records the source URL and SHA-256 in `src/schema-vocabulary-data.ts`. Vocabulary recognition is independent of the detailed rules in `schema-types.ts`: a valid type such as `ExerciseGym` does not produce an unknown-type warning merely because no detailed rule is implemented. This does not certify Google rich-result eligibility or impose an ancestor's requirements.
+
+Existing detailed rules continue to run. For `@type` arrays, every entry is checked for vocabulary membership and the first entry with a detailed rule supplies field validation. Recognition preserves existing case-insensitive matching and accepts bare names, canonical `http://schema.org/` / `https://schema.org/` IRIs, and the conventional `schema:` prefix; this is not a general JSON-LD context-expansion implementation. Known types bypass the plugin-name heuristic. Types missing from the pinned vocabulary still generate warnings.
+
+Scans and package builds make no vocabulary network requests. To deliberately refresh the bundled vocabulary, update the release pin in `scripts/update-schema-vocabulary.mjs`, run `npm run vocabulary:update`, review the generated changes, and run `npm test` and `npm run build`. A previously downloaded pinned JSON-LD file can be passed as an argument for offline regeneration. See https://schema.org/docs/developers.html for the official vocabulary downloads and https://schema.org/docs/terms.html for upstream terms.

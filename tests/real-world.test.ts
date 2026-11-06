@@ -306,7 +306,7 @@ describe('Real-world: @context variations', () => {
 // ─── Unknown/subtype handling ─────────────────────────────────────────────────
 
 describe('Real-world: unknown and subtype handling', () => {
-  it('sixt.com — AutoRental (unknown type) warns but does not error', () => {
+  it('sixt.com — AutoRental is recognized without detailed validation rules', () => {
     const r = validateObject({
       '@context': 'https://schema.org',
       '@type': 'AutoRental',
@@ -314,7 +314,7 @@ describe('Real-world: unknown and subtype handling', () => {
       aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.58', reviewCount: '56' },
     });
     expect(r.valid).toBe(true);
-    expect(r.issues.some(i => i.path.includes('@type') && i.severity === 'warning')).toBe(true);
+    expect(r.issues.some(i => i.path.includes('@type') && i.severity === 'warning')).toBe(false);
   });
 
   it('realsmiledentistry.com — Dentist (unknown type) warns but does not error', () => {
