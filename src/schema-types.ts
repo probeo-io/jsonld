@@ -54,8 +54,9 @@ const SCHEMA_TYPES: SchemaTypeDef[] = [
   // ── Content types ──────────────────────────────────────────────────────────
   {
     type: 'Article',
-    required: ['headline', 'author', 'datePublished'],
-    recommended: ['image', 'dateModified', 'publisher'],
+    guidance: 'Google recommendation (Article)',
+    required: [],
+    recommended: ['headline', 'author', 'datePublished', 'image', 'dateModified'],
     fieldValidators: {
       datePublished: dateValidator('datePublished'),
       dateModified: dateValidator('dateModified'),
@@ -65,8 +66,9 @@ const SCHEMA_TYPES: SchemaTypeDef[] = [
   },
   {
     type: 'BlogPosting',
-    required: ['headline', 'author', 'datePublished'],
-    recommended: ['image', 'dateModified', 'publisher'],
+    guidance: 'Google recommendation (Article)',
+    required: [],
+    recommended: ['headline', 'author', 'datePublished', 'image', 'dateModified'],
     fieldValidators: {
       datePublished: dateValidator('datePublished'),
       dateModified: dateValidator('dateModified'),
@@ -76,8 +78,9 @@ const SCHEMA_TYPES: SchemaTypeDef[] = [
   },
   {
     type: 'NewsArticle',
-    required: ['headline', 'author', 'datePublished', 'image'],
-    recommended: ['dateModified', 'publisher'],
+    guidance: 'Google recommendation (Article)',
+    required: [],
+    recommended: ['headline', 'author', 'datePublished', 'image', 'dateModified'],
     fieldValidators: {
       datePublished: dateValidator('datePublished'),
       dateModified: dateValidator('dateModified'),
@@ -125,6 +128,7 @@ const SCHEMA_TYPES: SchemaTypeDef[] = [
   },
   {
     type: 'LocalBusiness',
+    guidance: 'Google eligibility (LocalBusiness)',
     required: ['name', 'address'],
     recommended: ['telephone', 'url', 'openingHours', 'geo', 'image', 'priceRange', 'aggregateRating'],
     fieldValidators: {
@@ -140,6 +144,7 @@ const SCHEMA_TYPES: SchemaTypeDef[] = [
     // Store is a LocalBusiness subtype and uses the same Google eligibility
     // requirements for a physical business location.
     type: 'Store',
+    guidance: 'Google eligibility (LocalBusiness)',
     required: ['name', 'address'],
     fieldValidators: {
       url: urlValidator('url'),
@@ -207,6 +212,7 @@ const SCHEMA_TYPES: SchemaTypeDef[] = [
   // ── Navigation ─────────────────────────────────────────────────────────────
   {
     type: 'BreadcrumbList',
+    guidance: 'Google eligibility (Breadcrumb)',
     required: ['itemListElement'],
     nestedTypes: { itemListElement: ['ListItem'] },
   },

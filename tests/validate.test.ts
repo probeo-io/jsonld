@@ -76,9 +76,10 @@ describe('Core validation', () => {
 // ─── Required field validation ────────────────────────────────────────────────
 
 describe('Required fields', () => {
-  it('flags missing required fields on Article', () => {
+  it('recommends missing Article fields without false required errors', () => {
     const r = validateObject({ '@context': 'https://schema.org', '@type': 'Article' });
-    const errorFields = r.issues.filter(i => i.severity === 'error').map(i => i.path);
+    const errorFields = r.issues.filter(i => i.severity === 'warning').map(i => i.path);
+    expect(r.valid).toBe(true);
     expect(errorFields.some(p => p.includes('headline'))).toBe(true);
     expect(errorFields.some(p => p.includes('author'))).toBe(true);
     expect(errorFields.some(p => p.includes('datePublished'))).toBe(true);
@@ -133,7 +134,7 @@ describe('Required fields', () => {
     });
     expect(r.issues).toContainEqual({
       path: '$.itemListElement[0].name',
-      message: 'Missing required property "name" for breadcrumb ListItem',
+      message: 'Google eligibility (Breadcrumb): Missing required property "name" for breadcrumb ListItem',
       severity: 'error',
       type: 'ListItem',
     });
@@ -175,7 +176,7 @@ describe('Required fields', () => {
     const missingAddress = validateObject({ ...store, address: undefined });
     expect(missingAddress.issues).toContainEqual({
       path: '$.address',
-      message: 'Missing required property "address" for Store',
+      message: 'Google eligibility (LocalBusiness): Missing required property "address" for Store',
       severity: 'error',
       type: 'Store',
     });
@@ -246,7 +247,7 @@ describe('@graph support', () => {
     const r = validateObject({
       '@context': 'https://schema.org',
       '@graph': [
-        { '@type': 'Article' }, // missing required fields
+        { '@type': 'LocalBusiness' }, // missing required profile fields
       ],
     });
     expect(r.valid).toBe(false);
@@ -362,7 +363,7 @@ describe('Real-world schema types', () => {
     const r = validateObject({ '@context': 'https://schema.org', '@type': 'Answer' });
     expect(r.issues).toContainEqual({
       path: '$.text',
-      message: 'Missing required property "text" for Answer',
+      message: 'Structured-data profile: Missing required property "text" for Answer',
       severity: 'error',
       type: 'Answer',
     });

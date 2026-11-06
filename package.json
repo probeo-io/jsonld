@@ -1,6 +1,6 @@
 {
   "name": "@probeo/jsonld",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Fast, zero-dependency JSON-LD validator. Validates schema.org structured data against Google rich results requirements.",
   "type": "module",
   "main": "./dist/index.js",
@@ -23,7 +23,8 @@
     "prepublishOnly": "npm run build",
     "vocabulary:update": "node scripts/update-schema-vocabulary.mjs",
     "validate:fixture": "npm run build --silent && node scripts/validate-fixture.mjs",
-    "test:contract": "npm run build && node --experimental-vm-modules node_modules/.bin/vitest run tests/result-contract.test.ts"
+    "test:contract": "npm run build && node --experimental-vm-modules node_modules/.bin/vitest run tests/result-contract.test.ts",
+    "test:fuzz": "npm run build && node scripts/fuzz.mjs"
   },
   "keywords": [
     "json-ld",

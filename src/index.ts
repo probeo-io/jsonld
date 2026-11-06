@@ -1,7 +1,7 @@
 /**
  * @probeo/jsonld — Fast, zero-dependency JSON-LD validator.
  *
- * Validates schema.org structured data against Google rich results requirements.
+ * Validates bundled Schema.org vocabulary and selected detailed profiles.
  *
  * Usage:
  *   import { validateHtml, validateObject } from "@probeo/jsonld";
@@ -15,7 +15,8 @@ export { validateJsonLdObject as validateObject } from './validate.js';
 export { extractJsonLdBlocks } from './extract.js';
 
 import { extractJsonLdBlocks } from './extract.js';
-import { validateJsonLdObject } from './validate.js';
+import { validateDocument, limitResult } from './validate.js';
+import { LIMITS } from './limits.js';
 import type { ValidationResult, BlockResult, ValidationIssue } from './types.js';
 
 /**
@@ -23,7 +24,9 @@ import type { ValidationResult, BlockResult, ValidationIssue } from './types.js'
  * The main entry point for most use cases.
  */
 export function validateHtml(html: string): ValidationResult {
+  if (html.length > LIMITS.htmlCharacters) return { blocks: 1, errors: 1, warnings: 0, results: [limitResult(0, 'HTML size')] };
   const extracted = extractJsonLdBlocks(html);
+  const validated = validateDocument(extracted.map(block => block.parsed));
   const results: BlockResult[] = [];
 
   extracted.forEach((block, index) => {
@@ -39,7 +42,7 @@ export function validateHtml(html: string): ValidationResult {
       });
       return;
     }
-    results.push(validateJsonLdObject(block.parsed, index));
+    results.push(validated[index]);
   });
 
   const errors = results.reduce((n, r) => n + r.issues.filter(i => i.severity === 'error').length, 0);

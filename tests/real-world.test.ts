@@ -170,17 +170,17 @@ describe('Real-world: bugs found in production', () => {
     expect(r.issues.filter(i => i.severity === 'error')).toHaveLength(0);
   });
 
-  it('yeti.com — NewsArticle missing required headline and datePublished', () => {
+  it('yeti.com — NewsArticle missing recommended headline and datePublished', () => {
     const r = validateObject({
       '@context': 'http://schema.org/',
       '@type': 'NewsArticle',
       author: { '@type': 'Person', name: 'YETI' },
       publisher: { '@type': 'Organization', name: 'YETI' },
     });
-    expect(r.valid).toBe(false);
-    expect(r.issues.filter(i => i.severity === 'error' && i.path.includes('headline'))).toHaveLength(1);
-    expect(r.issues.filter(i => i.severity === 'error' && i.path.includes('datePublished'))).toHaveLength(1);
-    expect(r.issues.filter(i => i.severity === 'error' && i.path.includes('image'))).toHaveLength(1);
+    expect(r.valid).toBe(true);
+    expect(r.issues.filter(i => i.severity === 'warning' && i.path.includes('headline'))).toHaveLength(1);
+    expect(r.issues.filter(i => i.severity === 'warning' && i.path.includes('datePublished'))).toHaveLength(1);
+    expect(r.issues.filter(i => i.severity === 'warning' && i.path === '$.image')).toHaveLength(1);
   });
 
   it('fsresidential.com — LocalBusiness with empty required address fields', () => {
@@ -357,7 +357,7 @@ describe('Real-world: @graph', () => {
     const r = validateObject({
       '@context': 'https://schema.org',
       '@graph': [
-        { '@type': 'Organization', name: 'ReMaine Humble Farms', url: 'https://www.remainehumblefarms.com/', logo: 'https://www.remainehumblefarms.com/logo.png', sameAs: [] },
+        { '@type': 'Organization', name: 'ReMaine Humble Farms', url: 'https://www.remainehumblefarms.com/', logo: 'https://www.remainehumblefarms.com/logo.png', sameAs: ['https://www.facebook.com/remainehumblefarms'] },
         { '@type': 'WebSite', name: 'ReMaine Humble Farms', url: 'https://www.remainehumblefarms.com/' },
         { '@type': 'Store', name: 'ReMaine Humble Farms — Winslow, ME', address: { '@type': 'PostalAddress', streetAddress: '746 Augusta Rd', addressLocality: 'Winslow' } },
         { '@type': 'Store', name: 'ReMaine Humble Farms — Portland, ME', address: { '@type': 'PostalAddress', streetAddress: '10 Moulton St', addressLocality: 'Portland' } },

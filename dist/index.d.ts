@@ -1,7 +1,7 @@
 /**
  * @probeo/jsonld — Fast, zero-dependency JSON-LD validator.
  *
- * Validates schema.org structured data against Google rich results requirements.
+ * Validates bundled Schema.org vocabulary and selected detailed profiles.
  *
  * Usage:
  *   import { validateHtml, validateObject } from "@probeo/jsonld";

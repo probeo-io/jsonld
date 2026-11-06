@@ -34,6 +34,8 @@ export interface ValidationResult {
 /** Internal schema type definition */
 export interface SchemaTypeDef {
   type: string;
+  /** Source/applicability of this detailed profile. */
+  guidance?: string;
   required: string[];
   recommended?: string[];
   /** Field-level type validators: field name → validator fn */

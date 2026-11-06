@@ -58,7 +58,7 @@ describe('multi-type declarations', () => {
   it('retains known rule checks alongside an unknown type', () => {
     const result = validateObject(node(['TypoGym', 'Article']));
     expect(result.issues.some(issue => issue.type === 'TypoGym')).toBe(true);
-    expect(result.issues.some(issue => issue.type === 'Article' && issue.severity === 'error')).toBe(true);
+    expect(result.issues.some(issue => issue.type === 'Article' && issue.severity === 'warning')).toBe(true);
   });
   it('rejects an empty type array without crashing', () => {
     expect(validateObject(node([])).valid).toBe(false);
