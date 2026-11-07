@@ -15,6 +15,8 @@ export { extractJsonLdBlocks } from './extract.js';
 export { retiredGoogleFeature } from './retired-features.js';
 export type { RetiredGoogleFeature } from './retired-features.js';
 import type { ValidationResult, ValidationIssue } from './types.js';
+/** Read-only vocabulary access for alternative structured-data encodings. */
+export declare function schemaPropertyRanges(name: string): readonly string[] | undefined;
 /**
  * Extract and validate all JSON-LD blocks from raw HTML.
  * The main entry point for most use cases.

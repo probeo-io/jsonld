@@ -20,6 +20,13 @@ import { extractJsonLdBlocks } from './extract.js';
 import { validateDocument, limitResult } from './validate.js';
 import { LIMITS } from './limits.js';
 import type { ValidationResult, BlockResult, ValidationIssue } from './types.js';
+import { propertyDefinition } from './model.js';
+
+/** Read-only vocabulary access for alternative structured-data encodings. */
+export function schemaPropertyRanges(name: string): readonly string[] | undefined {
+  const definition = propertyDefinition(name);
+  return definition ? [...definition.ranges] : undefined;
+}
 
 /**
  * Extract and validate all JSON-LD blocks from raw HTML.

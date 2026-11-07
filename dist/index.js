@@ -15,6 +15,12 @@ export { retiredGoogleFeature } from './retired-features.js';
 import { extractJsonLdBlocks } from './extract.js';
 import { validateDocument, limitResult } from './validate.js';
 import { LIMITS } from './limits.js';
+import { propertyDefinition } from './model.js';
+/** Read-only vocabulary access for alternative structured-data encodings. */
+export function schemaPropertyRanges(name) {
+    const definition = propertyDefinition(name);
+    return definition ? [...definition.ranges] : undefined;
+}
 /**
  * Extract and validate all JSON-LD blocks from raw HTML.
  * The main entry point for most use cases.
