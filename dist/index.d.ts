@@ -12,6 +12,8 @@
 export type { ValidationIssue, BlockResult, ValidationResult, IssueSeverity } from './types.js';
 export { validateJsonLdObject as validateObject } from './validate.js';
 export { extractJsonLdBlocks } from './extract.js';
+export { retiredGoogleFeature } from './retired-features.js';
+export type { RetiredGoogleFeature } from './retired-features.js';
 import type { ValidationResult, ValidationIssue } from './types.js';
 /**
  * Extract and validate all JSON-LD blocks from raw HTML.

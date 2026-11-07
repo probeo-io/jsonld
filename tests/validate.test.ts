@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { validateHtml, validateObject, getIssues } from '../src/index.js';
+import { validateHtml, validateObject, getIssues, retiredGoogleFeature } from '../src/index.js';
 
 function html(jsonld: object | object[]): string {
   return `<!DOCTYPE html><html><head><script type="application/ld+json">${JSON.stringify(jsonld)}</script></head><body></body></html>`;
@@ -344,7 +344,9 @@ describe('Real-world schema types', () => {
         },
       ],
     });
-    expect(r.issues).toHaveLength(0);
+    expect(r.valid).toBe(true);
+    expect(r.issues).toHaveLength(1);
+    expect(retiredGoogleFeature(r.issues[0])?.id).toBe('faq');
   });
 
   it('validates each accepted Answer without reporting an unknown schema type', () => {
@@ -356,7 +358,9 @@ describe('Real-world schema types', () => {
         { '@type': 'Question', name: 'Second question?', acceptedAnswer: { '@type': 'Answer', text: 'Second answer.' } },
       ],
     });
-    expect(r.issues).toHaveLength(0);
+    expect(r.valid).toBe(true);
+    expect(r.issues).toHaveLength(1);
+    expect(retiredGoogleFeature(r.issues[0])?.id).toBe('faq');
   });
 
   it('requires text on an Answer', () => {

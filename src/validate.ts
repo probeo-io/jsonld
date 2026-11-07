@@ -4,6 +4,7 @@ import { SCHEMA_TYPE_MAP, isSuspiciousType } from './schema-types.js';
 import { buildDocument, expand, localName, type Document, type Node } from './document.js';
 import { ancestors, isA, propertyDefinition, enumerationTypes } from './model.js';
 import { checkObjects, LIMITS } from './limits.js';
+import { retiredGoogleFeatureForType } from './retired-features.js';
 
 export function limitResult(index: number, reason: string): BlockResult {
   return { index, valid: false, issues: [{ path: '$', message: `JSON-LD validation limit exceeded: ${reason}`, severity: 'error' }] };
@@ -121,6 +122,27 @@ export function validateDocument(inputs: unknown[]): BlockResult[] {
     if (context.partial) continue;
     const fields = effectiveFields(node, doc);
     const known = types.filter(isKnownSchemaType);
+    const retired = new Set<string>();
+    for (const type of known) {
+      const feature = retiredGoogleFeatureForType(type);
+      if (!feature || feature.id === 'sitelinks-search-box' || retired.has(feature.id)) continue;
+      retired.add(feature.id);
+      emit('@type', feature.message, 'warning', feature.schemaType);
+    }
+    // A generic SearchAction is still useful elsewhere. Only a WebSite search
+    // action identifies the markup associated with the retired search box.
+    if (known.some(type => schemaTypeName(type).toLowerCase() === 'website')
+      && valueNodes(fields.potentialAction, doc).some(value => {
+        if (!value || typeof value !== 'object') return false;
+        const action = doc.lookup.get(value);
+        if (!action?.context.schema || action.context.partial) return false;
+        const peers = typeof action.fields['@id'] === 'string' ? doc.ids.get(action.fields['@id']) ?? [action] : [action];
+        return peers.some(peer => peer.context.schema && !peer.context.partial
+          && peer.types.some(type => schemaTypeName(type).toLowerCase() === 'searchaction'));
+      })) {
+      const feature = retiredGoogleFeatureForType('SearchAction')!;
+      emit('potentialAction', feature.message, 'warning', feature.schemaType);
+    }
     const lineage = new Set(known.flatMap(type => [...ancestors(type)]));
     for (const [key, value] of Object.entries(own)) {
       if (key.startsWith('@') || !context.schema || context.partial) continue;

@@ -42,6 +42,9 @@ it.each([
   script(JSON.stringify({'@context':'https://schema.org','@graph':[{'@type':'LocalBusiness'},{'@type':'ExerciseGym'}]})),
   script(JSON.stringify({'@context':'https://schema.org','@type':'LocalBusiness',name:'Gym',address:{'@type':'PostalAddress'}})),
   script(JSON.stringify({'@context':'https://schema.org','@type':['ExerciseGym','LocalBusiness']})),
+  script(JSON.stringify({'@context':'https://schema.org','@type':'FAQPage'})),
+  script(JSON.stringify({'@context':'https://schema.org','@type':'HowTo'})),
+  script(JSON.stringify({'@context':'https://schema.org','@type':'WebSite',name:'Example',potentialAction:{'@type':'SearchAction'}})),
 ])('preserves the serialized contract for fixture %#', html => { resultContract(validateHtml(html)); });
 it('preserves block order, indexes, declared type values and omitted optional fields', () => {
   const types = ['ExerciseGym','LocalBusiness'];

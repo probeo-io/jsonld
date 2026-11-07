@@ -11,6 +11,7 @@
  */
 export { validateJsonLdObject as validateObject } from './validate.js';
 export { extractJsonLdBlocks } from './extract.js';
+export { retiredGoogleFeature } from './retired-features.js';
 import { extractJsonLdBlocks } from './extract.js';
 import { validateDocument, limitResult } from './validate.js';
 import { LIMITS } from './limits.js';

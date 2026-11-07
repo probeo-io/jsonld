@@ -1,6 +1,6 @@
 {
   "name": "@probeo/jsonld",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Fast, zero-dependency JSON-LD validator. Validates schema.org structured data against Google rich results requirements.",
   "type": "module",
   "main": "./dist/index.js",
